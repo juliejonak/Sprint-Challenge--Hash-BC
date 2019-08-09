@@ -18,10 +18,10 @@ def reconstruct_trip(tickets, length):
     for i in range(0, length):
         hash_table_insert(hashtable, tickets[i].source, tickets[i].destination)
     
-    # Find the starting destination to place at beginning of route
+    # Finds the starting destination to place at beginning of route
     route[0] = (hash_table_retrieve(hashtable, "NONE"))
 
-    # Find next destination for each previous source and appends to route
+    # Finds next destination for each previous source and appends to route
     for i in range(1, length):
         source = route[i-1]
         route[i] = hash_table_retrieve(hashtable, str(source))
