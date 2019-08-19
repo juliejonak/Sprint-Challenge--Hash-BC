@@ -20,10 +20,20 @@ def proof_of_work(last_proof):
     """
 
     start = timer()
-
     print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
+
+    # proof = last_proof
+
+    # We could optimize by randomizing our proof guess starting point
+    proof = random.randint(-sys.maxsize, sys.maxsize)
+
+    # We can simply optimize by calculating our last_hash in the proof_of_work to stop calculating it on each loop
+    
+    last_hash = hashlib.sha256(str(last_proof).encode()).hexdigest()[-6:]
+
+    while valid_proof(last_hash, proof) is False:
+        # proof += random.randint(1, 100)
+        proof += 1
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -37,9 +47,13 @@ def valid_proof(last_hash, proof):
     IE:  last_hash: ...999123456, new hash 123456888...
     """
 
-    # TODO: Your code here!
-    pass
+    first_six = hashlib.sha256(str(proof).encode()).hexdigest()[:6]
 
+    # TODO: Advanced optimization: use a hash table to store values and check if match already exists
+
+    return first_six == last_hash
+
+# If we had multiple miners running, we could start each one within a range, so they're always certain within a set of bounds and not competing with one another
 
 if __name__ == '__main__':
     # What node are we interacting with?
@@ -62,6 +76,7 @@ if __name__ == '__main__':
         print("Created new ID: " + id)
         f.write(id)
         f.close()
+
     # Run forever until interrupted
     while True:
         # Get the last proof from the server
